@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const messages = document.getElementById("messages");
 
   // Handle form submission
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  form.addEventListener("submit", function (evt) {
+    evt.preventDefault();
     if (input.value.trim()) {
-      socket.emit("message", input.value.trim());
+      socket.emit("message", input.value.trim().toLowerCase());
       input.value = "";
     }
   });

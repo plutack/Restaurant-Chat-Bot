@@ -3,42 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Resturnat Chatbot</title>
+    <title>ENter Username</title>
     <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <link
-      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
     />
-    <link rel="stylesheet" href="./css/style.css" />
-    <script defer src="/socket.io/socket.io.js"></script>
-    <script defer src="./js/extra.js"></script>
+    <style>
+      .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .form-container {
+        border: 1px solid #000;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
-    <div class="container">
-      <div class="card">
-        <div class="card-header">Order Chat Menu</div>
-        <div class="card-body">
-          <ul id="messages"></ul>
-          <form id="form">
-            <div class="input-group">
-              <input
-                id="message-box"
-                type="text"
-                class="form-control"
-                autocomplete="off"
-                placeholder="Type your message..."
-              />
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-paper-plane"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+    <div class="container centered-form">
+      <div class="form-container">
+        <form action="/" method="post">
+          <div class="form-group">
+            <label for="username">Enter Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="Enter Username"
+              autocomplete="off"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Submit
+          </button>
+        </form>
       </div>
     </div>
   </body>
