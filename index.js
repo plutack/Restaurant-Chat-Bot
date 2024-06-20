@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import { join } from "path";
 import session from "express-session";
 import MemoryStore from "memorystore";
+import moment from "moment";
 
 const MemoryStoreInstance = MemoryStore(session);
 
@@ -59,10 +60,10 @@ io.on("connection", (socket) => {
   console.log(id);
   if (!userSessions.hasOwnProperty(id)) {
     userSessions[id] = {
-      currentOrderHIstory: [],
+      currentOrderHistory: [],
       orderHistory: [],
       chatHistory: [],
-      chatState: "INITIAL",
+      chatState: "initial",
     };
   }
   console.log("a user connected");
@@ -104,46 +105,90 @@ io.on("connection", (socket) => {
         break;
       case "97":
         // Show current order
-        userSessions.id.currentOrderHIstory;
+        console.log(userSessions[id].currentOrderHistory);
+        let currOrderMsg = "<p>";
+        userSessions[id].currentOrderHistory.forEach((order, index) => {
+          currOrderMsg += `<p>${index + 1}. ${order}</p>`;
+        });
         socket.emit("message", {
-          text: "",
+          text: currOrderMsg,
+        });
+        socket.emit("message", {
+          text: welcomeMessage,
         });
         break;
       case "98":
         // Show order history
+        let tableHtml = '<table border="1">';
 
+        // Table headers
+        const orderHistory = userSessions[id].orderHistory;
+        tableHtml += "<tr><th>Order Content</th><th>Date</th></tr>";
+
+        // Iterate over each order in orderHistory
+        orderHistory.forEach((order) => {
+          // Create a row for each order
+          tableHtml += `<tr><td>${order.orderContent.join(", ")}</td><td>${
+            order.date
+          }</td></tr>`;
+        });
+        tableHtml += "</table>";
         socket.emit("message", {
-          text: "",
+          text: tableHtml,
         });
         break;
       case "99":
         // save/checkout order
-        const { orderHistory, currentOrderHistory } = userSessions.id;
-        userSessions.id.orderHistory.push(currentOrderHistory[0]);
-        userSessions.id.currentOrderHistory = [];
+        const orderContent = userSessions[id].currentOrderHistory;
+        const data = {
+          date: moment().format("MMMM Do YYYY, h:mm a"),
+          orderContent,
+        };
+        userSessions[id].orderHistory.push(data);
+        userSessions[id].currentOrderHistory = [];
         socket.emit("message", { text: "Order saved and sent" });
+        socket.emit("message", {
+          text: welcomeMessage,
+        });
         break;
 
       case "0":
         // Cancel order
-        userSessions.id.currentOrderHistory = [];
+        userSessions[id].currentOrderHistory = [];
         socket.emit("message", { text: "Order cancelled" });
+        socket.emit("message", {
+          text: welcomeMessage,
+        });
         break;
       case "a":
-        userSessions.id.currentOrderHistory.push(meals[0]);
+        userSessions[id].currentOrderHistory.push(meals[0]);
+        console.log(userSessions[id].currentOrderHistory);
         socket.emit("message", { text: `<p>${meals[0]} ordered</p>` });
+        socket.emit("message", {
+          text: welcomeMessage,
+        });
         break;
       case "b":
-        userSessions.id.currentOrderHIstory.push(meals[1]);
+        userSessions[id].currentOrderHistory.push(meals[1]);
+        console.log(userSessions[id].currentOrderHistory);
         socket.emit("message", { text: `<p>${meals[1]} ordered</p>` });
+        socket.emit("message", {
+          text: welcomeMessage,
+        });
         break;
       case "c":
-        userSessions.id.currentOrderHIstory.push(meals[2]);
+        userSessions[id].currentOrderHistory.push(meals[2]);
         socket.emit("message", { text: `<p>${meals[2]} ordered</p>` });
+        socket.emit("message", {
+          text: welcomeMessage,
+        });
         break;
       default:
         socket.emit("message", {
           text: "Invalid option. Please choose again.",
+        });
+        socket.emit("message", {
+          text: welcomeMessage,
         });
     }
   });
