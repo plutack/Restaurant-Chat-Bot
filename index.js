@@ -119,12 +119,19 @@ io.on("connection", (socket) => {
         break;
       case "98":
         // Show order history
-        let tableHtml = '<table border="1">';
-
-        // Table headers
         const orderHistory = userSessions[id].orderHistory;
+        if (!orderHistory.length) {
+          socket.emit("message", {
+            text: "You have not made an order before",
+          });
+          socket.emit("message", {
+            text: welcomeMessage,
+          });
+          break;
+        }
+        let tableHtml = '<table border="1">';
+        // Table headers
         tableHtml += "<tr><th>Order Content</th><th>Date</th></tr>";
-
         // Iterate over each order in orderHistory
         orderHistory.forEach((order) => {
           // Create a row for each order
@@ -136,9 +143,21 @@ io.on("connection", (socket) => {
         socket.emit("message", {
           text: tableHtml,
         });
+        socket.emit("message", {
+          text: welcomeMessage,
+        });
         break;
       case "99":
         // save/checkout order
+        if (!userSessions[id].currentOrderHistory.length) {
+          socket.emit("message", {
+            text: "No order made",
+          });
+          socket.emit("message", {
+            text: welcomeMessage,
+          });
+          break;
+        }
         const orderContent = userSessions[id].currentOrderHistory;
         const data = {
           date: moment().format("MMMM Do YYYY, h:mm a"),
