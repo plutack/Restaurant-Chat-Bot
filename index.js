@@ -26,7 +26,7 @@ io.engine.use(sessionMiddleware);
 
 io.on("connection", (socket) => {
   // generate unique user id based on device
-  const { id } = socket.request.session;
+  const { id, username } = socket.request.session;
   console.log(id);
   if (!userSessions.hasOwnProperty(id)) {
     userSessions[id] = {
@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
   ];
 
   const welcomeMessage = `
-      <p>Welcome! Select an option:</p>
+      <p>Welcome ${username}! Select an option:</p>
       <p>1. Place an order</p>
       <p>97. See current order</p>
       <p>98. See order history</p>
