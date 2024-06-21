@@ -2,51 +2,21 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { join } from "path";
-import session from "express-session";
-import MemoryStore from "memorystore";
 import moment from "moment";
-
-const MemoryStoreInstance = MemoryStore(session);
+import { sessionMiddleware } from "./src/middleware/session.js";
+import route from "./src/route/routes.js";
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 const port = process.env.PORT || 3000;
-const sessionMiddleware = session({
-  secret: "your-secret-key",
-  resave: false,
-  saveUninitialized: true,
-  store: new MemoryStoreInstance({
-    checkPeriod: 86400000,
-  }),
-});
 
 app.use(express.static(join(import.meta.dirname, "src", "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
-
-app.get("/", (req, res) => {
-  if (req.session.username) {
-    res.redirect("/chat");
-    return;
-  }
-  res.sendFile(join(import.meta.dirname, "src", "public", "index.html"));
-});
-
-app.post("/", (req, res) => {
-  req.session.username = req.body.username;
-  res.redirect("/chat");
-});
-
-app.get("/chat", (req, res) => {
-  if (req.session.username) {
-    res.sendFile(join(import.meta.dirname, "src", "public", "chat.html"));
-    return;
-  }
-  res.redirect("/");
-});
+app.use("/", route);
 
 // websocket
 
