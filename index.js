@@ -47,9 +47,9 @@ io.on("connection", (socket) => {
   const welcomeMessage = `
       <p>Welcome! Select an option:</p>
       <p>1. Place an order</p>
-      <p>99. Checkout order</p>
-      <p>98. See order history</p>
       <p>97. See current order</p>
+      <p>98. See order history</p>
+      <p>99. Checkout order</p>
       <p>0. Cancel order</p>
     `;
   // Send initial options to the client
@@ -105,9 +105,7 @@ io.on("connection", (socket) => {
         // Iterate over each order in orderHistory
         orderHistory.forEach((order) => {
           // Create a row for each order
-          tableHtml += `<tr><td>${order.orderContent.join(", ")}</td><td>${
-            order.date
-          }</td></tr>`;
+          tableHtml += `<tr><td>${order.orderContent}</td><td>${order.date}</td></tr>`;
         });
         tableHtml += "</table>";
         socket.emit("message", {
