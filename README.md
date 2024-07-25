@@ -1,10 +1,10 @@
-# A simple Resturant Chatbot
+# A simple Restaurant Chatbot
 
 **Prerequisites:** Node.js version 20.6.0 or higher is required. The project uses the --env-file=.env flag to load environment variables, which is supported in Node.js 20.6.0 and above.
 
 ## Description
 
-A simple node project built with express and socket.io fow webscoket features to show the the usefulness of websocket connections in web applications.
+A simple node project built with express and socket.io fow websocket features to show the the usefulness of websocket connections in web applications.
 To run this project locally;
 
 1. Clone this repo.
